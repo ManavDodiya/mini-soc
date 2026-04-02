@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini SOC Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:       #080c10;
+  --bg2:      #0d1117;
+  --bg3:      #111820;
+  --panel:    #0f1923;
+  --border:   #1e3045;
+  --border2:  #234;
+  --green:    #00ff88;
+  --green2:   #00cc66;
+  --red:      #ff3355;
+  --orange:   #ff8c00;
+  --yellow:   #ffd700;
+  --blue:     #00aaff;
+  --cyan:     #00e5ff;
+  --purple:   #a855f7;
+  --text:     #b8ccd8;
+  --text2:    #6a8a9f;
+  --mono:     'Share Tech Mono', monospace;
+  --head:     'Rajdhani', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,255,136,0.012) 2px,
+    rgba(0,255,136,0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Header ── */
+header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: var(--green); box-shadow: 0 0 8px rgba(0,255,136,0.3); }
+  50%       { border-color: var(--green2); box-shadow: 0 0 16px rgba(0,255,136,0.5); }
+}
+
+.logo-text {
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+}
+.logo-sub {
+  font-size: 10px;
+  color: var(--text2);
+  letter-spacing: 3px;
+  margin-top: 2px;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: blink 1.5s infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.clock { color: var(--cyan); font-size: 14px; letter-spacing: 1px; }
+
+/* ── Nav tabs ── */
+nav {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 24px;
+  gap: 0;
+}
+
+.tab {
+  padding: 10px 22px;
+  font-family: var(--head);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text2);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+  user-select: none;
+  text-transform: uppercase;
+}
+.tab:hover  { color: var(--text); background: rgba(255,255,255,.03); }
+.tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── Layout ── */
+main { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.page { display: none; }
+.page.active { display: flex; flex-direction: column; gap: 16px; }
+
+.row { display: flex; gap: 16px; }
+.row > * { flex: 1; min-width: 0; }
+
+/* ── Panels ── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.panel-head {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-title {
+  font-family: var(--head);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text);
+  text-transform: uppercase;
+}
+.panel-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--mono);
+}
+.badge-green  { background: rgba(0,255,136,.1); color: var(--green); border: 1px solid rgba(0,255,136,.3); }
+.badge-red    { background: rgba(255,51,85,.1);  color: var(--red);   border: 1px solid rgba(255,51,85,.3); }
+.badge-orange { background: rgba(255,140,0,.1);  color: var(--orange);border: 1px solid rgba(255,140,0,.3); }
+.badge-blue   { background: rgba(0,170,255,.1);  color: var(--blue);  border: 1px solid rgba(0,170,255,.3); }
+
+.panel-body { padding: 12px 16px; }
+
+/* ── Stat cards ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--accent, var(--green));
+}
+.stat-label { font-size: 10px; letter-spacing: 2px; color: var(--text2); text-transform: uppercase; }
+.stat-value {
+  font-family: var(--head);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent, var(--green));
+  line-height: 1.1;
+  margin-top: 4px;
+}
+.stat-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── Tables ── */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  text-align: left;
+  padding: 6px 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text2);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--head);
+  font-weight: 600;
+}
+.tbl td {
+  padding: 5px 10px;
+  border-bottom: 1px solid rgba(30,48,69,.5);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+.tbl tr:hover td { background: rgba(255,255,255,.02); }
+.tbl tr:last-child td { border-bottom: none; }
+
+/* severity colors */
+.sev-critical { color: var(--red); }
+.sev-high     { color: var(--orange); }
+.sev-warning  { color: var(--yellow); }
+.sev-info, .sev-low { color: var(--blue); }
+
+/* protocol badges */
+.proto {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+.proto-tcp  { background: rgba(0,170,255,.15); color: var(--blue); }
+.proto-udp  { background: rgba(168,85,247,.15); color: var(--purple); }
+.proto-icmp { background: rgba(255,215,0,.1);   color: var(--yellow); }
+
+/* ── Buttons ── */
+.btn {
+  padding: 8px 18px;
+  border-radius: 5px;
+  border: 1px solid;
+  font-family: var(--head);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all .2s;
+  text-transform: uppercase;
+}
+.btn-green  { background: rgba(0,255,136,.1); color: var(--green); border-color: var(--green2); }
+.btn-green:hover  { background: rgba(0,255,136,.2); box-shadow: 0 0 12px rgba(0,255,136,.3); }
+.btn-red    { background: rgba(255,51,85,.1);  color: var(--red);   border-color: var(--red); }
+.btn-red:hover    { background: rgba(255,51,85,.2);  box-shadow: 0 0 12px rgba(255,51,85,.3); }
+.btn-orange { background: rgba(255,140,0,.1);  color: var(--orange);border-color: var(--orange); }
+.btn-orange:hover { background: rgba(255,140,0,.2);  box-shadow: 0 0 12px rgba(255,140,0,.3); }
+.btn-blue   { background: rgba(0,170,255,.1);  color: var(--blue);  border-color: var(--blue); }
+.btn-blue:hover   { background: rgba(0,170,255,.2);  box-shadow: 0 0 12px rgba(0,170,255,.3); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Forms ── */
+.input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 8px 12px;
+  width: 100%;
+  outline: none;
+  transition: border .2s;
+}
+.input:focus { border-color: var(--blue); }
+
+/* ── Alert list ── */
+.alert-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border-left: 3px solid;
+  margin-bottom: 6px;
+  background: var(--bg3);
+  animation: slide-in .3s ease;
+}
+@keyframes slide-in { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+
+.alert-item.critical { border-color: var(--red);    background: rgba(255,51,85,.06); }
+.alert-item.warning  { border-color: var(--yellow);  background: rgba(255,215,0,.04); }
+.alert-item.info     { border-color: var(--blue);    background: rgba(0,170,255,.04); }
+
+.alert-time  { color: var(--text2); font-size: 11px; white-space: nowrap; }
+.alert-title { font-family: var(--head); font-weight: 700; font-size: 14px; }
+.alert-detail { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+/* ── Scan UI ── */
+.scan-form { display: flex; gap: 10px; margin-bottom: 14px; }
+.scan-output {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 12px;
+  min-height: 120px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.finding {
+  border-left: 3px solid;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+  background: var(--bg3);
+}
+.finding.critical { border-color: var(--red); }
+.finding.high     { border-color: var(--orange); }
+.finding.low      { border-color: var(--blue); }
+
+/* ── File transfer UI ── */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  margin-bottom: 12px;
+}
+.drop-zone:hover, .drop-zone.over {
+  border-color: var(--blue);
+  background: rgba(0,170,255,.04);
+}
+.drop-zone p { color: var(--text2); font-size: 12px; margin-top: 8px; }
+
+.crypto-display {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--cyan);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ── Progress bar ── */
+.progress-wrap { background: var(--bg); border-radius: 4px; overflow: hidden; height: 6px; }
+.progress-bar  {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  border-radius: 4px;
+  transition: width .4s;
+  width: 0%;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+/* ── Chart container ── */
+.chart-wrap { position: relative; height: 180px; }
+
+/* ── Log stream ── */
+.log-stream {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  padding: 10px;
+  height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.log-line { padding: 1px 0; border-bottom: 1px solid rgba(30,48,69,.3); }
+.log-line:last-child { border-bottom: none; }
+.log-crit { color: var(--red); }
+.log-warn { color: var(--yellow); }
+.log-info { color: var(--text2); }
+
+.tag {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  margin-right: 5px;
+  letter-spacing: .5px;
+  font-family: var(--head);
+  font-weight: 700;
+}
+.tag-crit { background: rgba(255,51,85,.2);  color: var(--red); }
+.tag-warn { background: rgba(255,215,0,.15); color: var(--yellow); }
+.tag-info { background: rgba(0,170,255,.1);  color: var(--blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🛡</div>
+    <div>
+      <div class="logo-text">MINI SOC</div>
+      <div class="logo-sub">SECURITY OPERATIONS CENTER</div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <span><span class="status-dot"></span>LIVE</span>
+    <span id="pkt-total">PKT: 0</span>
+    <span id="alert-total" style="color:var(--red)">ALERTS: 0</span>
+    <span class="clock" id="clock">--:--:--</span>
+  </div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="showPage('overview')">Overview</div>
+  <div class="tab" onclick="showPage('ids')">IDS / Network</div>
+  <div class="tab" onclick="showPage('scanner')">Vuln Scanner</div>
+  <div class="tab" onclick="showPage('logs')">Log Monitor</div>
+  <div class="tab" onclick="showPage('transfer')">Secure Transfer</div>
+</nav>
+
+<main>
+
+<!-- ═══════════════ OVERVIEW ═══════════════ -->
+<div class="page active" id="page-overview">
+  <div class="stat-grid">
+    <div class="stat-card" style="--accent:var(--green)">
+      <div class="stat-label">Packets Captured</div>
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-sub">since startup</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--red)">
+      <div class="stat-label">Active Threats</div>
+      <div class="stat-value" id="stat-threats">0</div>
+      <div class="stat-sub">IDS alerts</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--blue)">
+      <div class="stat-label">Bytes Monitored</div>
+      <div class="stat-value" id="stat-bytes">0</div>
+      <div class="stat-sub">MB</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--yellow)">
+      <div class="stat-label">Log Events</div>
+      <div class="stat-value" id="stat-logs">0</div>
+      <div class="stat-sub">total entries</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel" style="flex:1.6">
+      <div class="panel-head">
+        <span class="panel-title">Traffic Overview</span>
+        <span class="panel-badge badge-green" id="proto-badge">TCP/UDP/ICMP</span>
+      </div>
+      <div class="panel-body">
+        <div class="chart-wrap"><canvas id="traffic-chart"></canvas></div>
+      </div>
+    </div>
+    <div class="panel" style="flex:1">
+      <div class="panel-head">
+        <span class="panel-title">Recent Alerts</span>
+        <span class="panel-badge badge-red" id="alert-count-badge">0</span>
+      </div>
+      <div class="panel-body" style="max-height:240px;overflow-y:auto" id="alert-mini-list">
+        <div style="color:var(--text2);font-size:12px;padding:20px 0;text-align:center">Awaiting data...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Live Packet Feed</span>
+      <span class="panel-badge badge-blue">REAL-TIME</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl">
+        <thead><tr>
+          <th>Time</th><th>Source IP</th><th>Destination IP</th>
+          <th>Proto</th><th>Src Port</th><th>Dst Port</th><th>Size (B)</th>
+        </tr></thead>
+        <tbody id="packet-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ IDS / NETWORK ═══════════════ -->
+<div class="page" id="page-ids">
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Attack Simulator</span>
+      <span class="panel-badge badge-red">DEMO MODE</span>
+    </div>
+    <div class="panel-body">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span style="color:var(--text2);font-size:12px">Inject attack:</span>
+        <button class="btn btn-red" onclick="injectAttack('port_scan')">⚡ Port Scan</button>
+        <button class="btn btn-red" onclick="injectAttack('dos')">💣 DoS Flood</button>
+        <button class="btn btn-red" onclick="injectAttack('brute_force')">🔑 Brute Force SSH</button>
+      </div>
+      <div id="inject-result" style="margin-top:10px;font-size:12px;color:var(--green);min-height:20px"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">IDS Alerts</span>
+        <span class="panel-badge badge-red" id="ids-alert-count">0</span>
+      </div>
+      <div class="panel-body" style="max-height:380px;overflow-y:auto" id="ids-alert-list">
+        <div style="color:var(--text2);font-size:12px;text-align:center;padding:20px">No alerts yet — inject an attack above!</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Protocol Distribution</span>
+      </div>
+      <div class="panel-body">
+        <div class="chart-wrap" style="height:200px"><canvas id="proto-chart"></canvas></div>
+        <div style="margin-top:12px" id="proto-stats"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Packet Inspector</span>
+      <span class="panel-badge badge-blue">LIVE</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <div style="overflow-x:auto">
+        <table class="tbl" id="ids-pkt-table">
+          <thead><tr>
+            <th>Time</th><th>Src IP</th><th>Dst IP</th>
+            <th>Proto</th><th>Sport</th><th>Dport</th><th>Size</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ VULN SCANNER ═══════════════ -->
+<div class="page" id="page-scanner">
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Web Vulnerability Scanner</span>
+      <span class="panel-badge badge-orange">SQLi + XSS + Headers</span>
+    </div>
+    <div class="panel-body">
+      <div class="scan-form">
+        <input class="input" id="scan-url" placeholder="Enter target URL (e.g. http://testphp.vulnweb.com)" style="flex:1">
+        <button class="btn btn-orange" id="btn-scan" onclick="startScan()">▶ SCAN</button>
+        <button class="btn btn-blue" onclick="startDemoScan()">🎯 DEMO TARGET</button>
+      </div>
+      <div class="progress-wrap" id="scan-progress-wrap" style="display:none;margin-bottom:12px">
+        <div class="progress-bar" id="scan-progress-bar"></div>
+      </div>
+      <div id="scan-status" style="font-size:12px;color:var(--text2);margin-bottom:10px"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="scan-results-panel" style="display:none">
+    <div class="panel-head">
+      <span class="panel-title">Scan Results</span>
+      <span class="panel-badge badge-red" id="scan-finding-count">0 findings</span>
+    </div>
+    <div class="panel-body">
+      <div id="scan-summary" style="margin-bottom:12px;font-size:13px;color:var(--cyan)"></div>
+      <div id="scan-findings"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LOG MONITOR ═══════════════ -->
+<div class="page" id="page-logs">
+  <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card" style="--accent:var(--red)">
+      <div class="stat-label">Critical Events</div>
+      <div class="stat-value" id="log-critical">0</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--yellow)">
+      <div class="stat-label">Warnings</div>
+      <div class="stat-value" id="log-warning">0</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--blue)">
+      <div class="stat-label">Info Events</div>
+      <div class="stat-value" id="log-info">0</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="panel" style="flex:2">
+      <div class="panel-head">
+        <span class="panel-title">Live Event Stream</span>
+        <span class="panel-badge badge-green">TAILING</span>
+      </div>
+      <div class="panel-body" style="padding:8px">
+        <div class="log-stream" id="log-stream"></div>
+      </div>
+    </div>
+    <div class="panel" style="flex:1">
+      <div class="panel-head">
+        <span class="panel-title">Event Log Table</span>
+      </div>
+      <div class="panel-body" style="padding:0;max-height:340px;overflow-y:auto">
+        <table class="tbl" id="log-table">
+          <thead><tr>
+            <th>Time</th><th>Level</th><th>Event</th><th>User</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SECURE TRANSFER ═══════════════ -->
+<div class="page" id="page-transfer">
+  <div class="row">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Encrypt File</span>
+        <span class="panel-badge badge-green">AES-256 + RSA-2048</span>
+      </div>
+      <div class="panel-body">
+        <div class="drop-zone" id="enc-drop" onclick="document.getElementById('enc-file').click()">
+          <div style="font-size:28px">🔒</div>
+          <div style="font-family:var(--head);font-size:15px;font-weight:700;margin-top:8px">Drop file to encrypt</div>
+          <p>Click or drag a file here — encrypted with AES-256-CBC, key wrapped in RSA-2048</p>
+          <input type="file" id="enc-file" style="display:none" onchange="encryptFile(this)">
+        </div>
+        <button class="btn btn-green" onclick="runTransferDemo()" style="width:100%;margin-bottom:10px">▶ Run Crypto Demo</button>
+        <div class="crypto-display" id="enc-output">-- encryption output will appear here --</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Decrypt File</span>
+        <span class="panel-badge badge-blue">SHA-256 Verified</span>
+      </div>
+      <div class="panel-body">
+        <div class="drop-zone" id="dec-drop" onclick="document.getElementById('dec-file').click()">
+          <div style="font-size:28px">🔓</div>
+          <div style="font-family:var(--head);font-size:15px;font-weight:700;margin-top:8px">Drop .enc file to decrypt</div>
+          <p>Upload a .enc JSON package to decrypt and verify integrity</p>
+          <input type="file" id="dec-file" style="display:none" accept=".enc,.json" onchange="decryptFile(this)">
+        </div>
+        <div class="crypto-display" id="dec-output">-- decryption output will appear here --</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span class="panel-title">Transfer Log</span>
+      <span class="panel-badge badge-blue" id="transfer-count">0 operations</span>
+    </div>
+    <div class="panel-body" style="padding:0">
+      <table class="tbl" id="transfer-log-table">
+        <thead><tr>
+          <th>Time</th><th>File</th><th>Operation</th>
+          <th>Size</th><th>SHA-256</th><th>Status</th>
+        </tr></thead>
+        <tbody><tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No operations yet</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── Clock ────────────────────────────────────────────────────────────────────
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── Charts ───────────────────────────────────────────────────────────────────
+const CHART_OPTS = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { color: 'rgba(30,48,69,.5)' }, ticks: { color: '#6a8a9f', maxTicksLimit: 8, font: { family: 'Share Tech Mono', size: 11 } } },
+    y: { grid: { color: 'rgba(30,48,69,.5)' }, ticks: { color: '#6a8a9f', font: { family: 'Share Tech Mono', size: 11 } } },
+  },
+  animation: { duration: 300 },
+};
+
+const trafficHistory = { labels: [], tcp: [], udp: [], icmp: [] };
+const trafficCtx = document.getElementById('traffic-chart').getContext('2d');
+const trafficChart = new Chart(trafficCtx, {
+  type: 'line',
+  data: {
+    labels: trafficHistory.labels,
+    datasets: [
+      { label: 'TCP',  data: trafficHistory.tcp,  borderColor: '#00aaff', backgroundColor: 'rgba(0,170,255,.08)', fill: true, tension: .4, pointRadius: 0, borderWidth: 1.5 },
+      { label: 'UDP',  data: trafficHistory.udp,  borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,.06)', fill: true, tension: .4, pointRadius: 0, borderWidth: 1.5 },
+      { label: 'ICMP', data: trafficHistory.icmp, borderColor: '#ffd700', backgroundColor: 'rgba(255,215,0,.04)', fill: true, tension: .4, pointRadius: 0, borderWidth: 1.5 },
+    ],
+  },
+  options: { ...CHART_OPTS, plugins: { legend: { display: true, labels: { color: '#6a8a9f', font: { family: 'Share Tech Mono', size: 11 }, boxWidth: 12 } } } },
+});
+
+let lastStats = { tcp: 0, udp: 0, icmp: 0 };
+
+function updateTrafficChart(stats) {
+  const now = new Date().toLocaleTimeString('en-GB', { hour12: false });
+  trafficHistory.labels.push(now);
+  trafficHistory.tcp.push(stats.tcp - (lastStats.tcp || 0));
+  trafficHistory.udp.push(stats.udp - (lastStats.udp || 0));
+  trafficHistory.icmp.push(stats.icmp - (lastStats.icmp || 0));
+  lastStats = { ...stats };
+  if (trafficHistory.labels.length > 30) {
+    ['labels','tcp','udp','icmp'].forEach(k => trafficHistory[k].shift());
+  }
+  trafficChart.update();
+}
+
+const protoCtx = document.getElementById('proto-chart').getContext('2d');
+const protoChart = new Chart(protoCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['TCP','UDP','ICMP','Other'],
+    datasets: [{
+      data: [0,0,0,0],
+      backgroundColor: ['rgba(0,170,255,.7)','rgba(168,85,247,.7)','rgba(255,215,0,.7)','rgba(106,138,159,.7)'],
+      borderColor: 'rgba(0,0,0,0)',
+    }],
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#6a8a9f', font: { family: 'Share Tech Mono', size: 11 }, boxWidth: 12 } } },
+    animation: { duration: 400 },
+  },
+});
+
+function updateProtoChart(stats) {
+  protoChart.data.datasets[0].data = [stats.tcp, stats.udp, stats.icmp, stats.other];
+  protoChart.update();
+  document.getElementById('proto-stats').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">
+      <span style="color:#6a8a9f">TCP: <span style="color:#00aaff">${stats.tcp}</span></span>
+      <span style="color:#6a8a9f">UDP: <span style="color:#a855f7">${stats.udp}</span></span>
+      <span style="color:#6a8a9f">ICMP: <span style="color:#ffd700">${stats.icmp}</span></span>
+      <span style="color:#6a8a9f">Other: <span style="color:#6a8a9f">${stats.other}</span></span>
+    </div>`;
+}
+
+// ── Server-Sent Events ────────────────────────────────────────────────────────
+function connectSSE() {
+  const evtSource = new EventSource('/api/stream');
+  evtSource.onmessage = (e) => {
+    let data;
+    try { data = JSON.parse(e.data); } catch { return; }
+
+    if (data.connected) return;
+
+    if (data.scan_complete) {
+      const result = data.scan_complete;
+      showScanResults(result);
+      document.getElementById('btn-scan').disabled = false;
+      document.getElementById('btn-scan').textContent = '▶ SCAN';
+      document.getElementById('scan-progress-wrap').style.display = 'none';
+      document.getElementById('scan-status').textContent = 'Scan complete.';
+      return;
+    }
+
+    if (data.stats) {
+      updateStats(data.stats);
+      updateTrafficChart(data.stats);
+      updateProtoChart(data.stats);
+    }
+    if (data.packets)   updatePacketTable(data.packets);
+    if (data.alerts)    updateAlertList(data.alerts);
+    if (data.logs)      updateLogStream(data.logs);
+    if (data.log_stats) updateLogStats(data.log_stats);
+    if (data.stats && data.alerts && data.log_stats)
+      updateHeaderCounts(data.stats, data.alerts, data.log_stats);
+  };
+  evtSource.onerror = () => {
+    setTimeout(connectSSE, 3000); // auto-reconnect
+  };
+}
+connectSSE();
+
+function updateHeaderCounts(stats, alerts, logStats) {
+  document.getElementById('pkt-total').textContent = 'PKT: ' + stats.total_packets.toLocaleString();
+  document.getElementById('alert-total').textContent = 'ALERTS: ' + alerts.length;
+}
+
+// ── Stats ──────────────────────────────────────────────────────────────────
+function updateStats(stats) {
+  document.getElementById('stat-total').textContent = stats.total_packets.toLocaleString();
+  document.getElementById('stat-bytes').textContent = (stats.bytes_total / 1048576).toFixed(1);
+}
+
+// ── Packet Table ──────────────────────────────────────────────────────────────
+function protoTag(p) {
+  const cls = { TCP: 'tcp', UDP: 'udp', ICMP: 'icmp' };
+  return `<span class="proto proto-${(cls[p]||'tcp')}">${p}</span>`;
+}
+
+function updatePacketTable(packets) {
+  const tbody = document.querySelector('#packet-table');
+  tbody.innerHTML = packets.slice(-15).reverse().map(p => `
+    <tr>
+      <td style="color:var(--text2)">${p.time}</td>
+      <td style="color:var(--cyan)">${p.src}</td>
+      <td>${p.dst}</td>
+      <td>${protoTag(p.proto)}</td>
+      <td>${p.sport}</td>
+      <td>${p.dport}</td>
+      <td>${p.size}</td>
+    </tr>`).join('');
+
+  // IDS tab too
+  const tbody2 = document.querySelector('#ids-pkt-table tbody');
+  tbody2.innerHTML = tbody.innerHTML;
+}
+
+// ── Alert List ────────────────────────────────────────────────────────────────
+function updateAlertList(alerts) {
+  const html = alerts.slice(-8).reverse().map(a => `
+    <div class="alert-item ${a.level}">
+      <div style="flex:1">
+        <div style="display:flex;gap:10px;align-items:baseline">
+          <span class="alert-title sev-${a.level}">${a.title}</span>
+          <span class="alert-time">${a.time}</span>
+        </div>
+        <div class="alert-detail">${a.detail} ${a.src_ip ? '— src: ' + a.src_ip : ''}</div>
+      </div>
+    </div>`).join('');
+
+  const mini = document.getElementById('alert-mini-list');
+  const ids  = document.getElementById('ids-alert-list');
+  if (alerts.length === 0) {
+    const empty = '<div style="color:var(--text2);font-size:12px;text-align:center;padding:20px">No alerts yet</div>';
+    mini.innerHTML = ids.innerHTML = empty;
+  } else {
+    mini.innerHTML = ids.innerHTML = html;
+  }
+  document.getElementById('alert-count-badge').textContent = alerts.length;
+  document.getElementById('ids-alert-count').textContent = alerts.length;
+  document.getElementById('stat-threats').textContent = alerts.filter(a => a.level === 'critical').length;
+}
+
+// ── Log Monitor ───────────────────────────────────────────────────────────────
+function updateLogStream(logs) {
+  const stream = document.getElementById('log-stream');
+  stream.innerHTML = logs.slice(-50).reverse().map(l => {
+    const cls = l.level === 'critical' ? 'log-crit' : l.level === 'warning' ? 'log-warn' : 'log-info';
+    const tag = l.level === 'critical' ? 'tag-crit' : l.level === 'warning' ? 'tag-warn' : 'tag-info';
+    return `<div class="log-line ${cls}"><span class="tag ${tag}">${l.level.toUpperCase()}</span><span style="color:var(--text2)">[${l.time}]</span> ${l.event_type} — ${l.message}</div>`;
+  }).join('');
+
+  // Table
+  const tbody = document.querySelector('#log-table tbody');
+  tbody.innerHTML = logs.slice(-30).reverse().map(l => {
+    const cls = l.level === 'critical' ? 'sev-critical' : l.level === 'warning' ? 'sev-warning' : 'sev-info';
+    return `<tr>
+      <td style="color:var(--text2)">${l.time}</td>
+      <td class="${cls}" style="text-transform:uppercase;font-size:11px">${l.level}</td>
+      <td>${l.event_type}</td>
+      <td style="color:var(--cyan)">${l.user || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateLogStats(stats) {
+  document.getElementById('log-critical').textContent = stats.critical || 0;
+  document.getElementById('log-warning').textContent  = stats.warning  || 0;
+  document.getElementById('log-info').textContent     = stats.info     || 0;
+  document.getElementById('stat-logs').textContent    = stats.total    || 0;
+}
+
+// ── Attack Injection ──────────────────────────────────────────────────────────
+async function injectAttack(type) {
+  const res = await fetch('/api/inject_attack', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type }),
+  });
+  const data = await res.json();
+  document.getElementById('inject-result').textContent =
+    `✓ ${type.replace('_',' ')} injected | src: ${data.src} → dst: ${data.dst}`;
+}
+
+// ── Vuln Scanner ──────────────────────────────────────────────────────────────
+let scanProgressInterval = null;
+
+function startScanUI() {
+  document.getElementById('btn-scan').disabled = true;
+  document.getElementById('btn-scan').textContent = '⏳ Scanning...';
+  document.getElementById('scan-progress-wrap').style.display = 'block';
+  document.getElementById('scan-results-panel').style.display = 'none';
+  let pct = 0;
+  scanProgressInterval = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 8, 90);
+    document.getElementById('scan-progress-bar').style.width = pct + '%';
+  }, 600);
+}
+
+async function startScan() {
+  const url = document.getElementById('scan-url').value.trim();
+  if (!url) { alert('Enter a URL first'); return; }
+  document.getElementById('scan-status').textContent = `Scanning ${url}...`;
+  startScanUI();
+  await fetch('/api/scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url }),
+  });
+}
+
+async function startDemoScan() {
+  document.getElementById('scan-url').value = 'http://testphp.vulnweb.com';
+  document.getElementById('scan-status').textContent = 'Scanning demo target (testphp.vulnweb.com)...';
+  startScanUI();
+  await fetch('/api/scan/demo', { method: 'POST' });
+}
+
+function showScanResults(result) {
+  clearInterval(scanProgressInterval);
+  document.getElementById('scan-progress-bar').style.width = '100%';
+  if (result.error) {
+    document.getElementById('scan-status').textContent = 'Error: ' + result.error;
+    return;
+  }
+  const panel = document.getElementById('scan-results-panel');
+  panel.style.display = 'block';
+  document.getElementById('scan-summary').textContent = result.summary;
+  document.getElementById('scan-finding-count').textContent = (result.findings || []).length + ' findings';
+
+  const html = (result.findings || []).map(f => `
+    <div class="finding ${f.severity}">
+      <div style="display:flex;gap:12px;align-items:baseline;margin-bottom:4px">
+        <span style="font-family:var(--head);font-weight:700;font-size:14px" class="sev-${f.severity}">${f.type}</span>
+        <span class="panel-badge badge-${f.severity === 'critical' ? 'red' : f.severity === 'high' ? 'orange' : 'blue'}">${f.severity.toUpperCase()}</span>
+        <span style="color:var(--text2);font-size:11px">${f.method} ${f.url}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text)">${f.detail}</div>
+      ${f.payload ? `<div style="margin-top:4px;font-size:11px;color:var(--text2)">Payload: <code style="color:var(--orange)">${escHtml(f.payload)}</code></div>` : ''}
+      ${f.evidence ? `<div style="font-size:11px;color:var(--text2)">Evidence: ${escHtml(f.evidence)}</div>` : ''}
+    </div>`).join('');
+
+  document.getElementById('scan-findings').innerHTML = html || '<div style="color:var(--green);padding:12px">No vulnerabilities detected ✓</div>';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Secure Transfer ───────────────────────────────────────────────────────────
+async function encryptFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('file', file);
+  document.getElementById('enc-output').textContent = '⏳ Encrypting...';
+  const res = await fetch('/api/encrypt', { method: 'POST', body: fd });
+  const data = await res.json();
+  document.getElementById('enc-output').textContent = JSON.stringify(data, null, 2);
+  refreshTransferLog();
+}
+
+async function decryptFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const fd = new FormData();
+  fd.append('file', file);
+  document.getElementById('dec-output').textContent = '⏳ Decrypting...';
+  const res = await fetch('/api/decrypt', { method: 'POST', body: fd });
+  const data = await res.json();
+  document.getElementById('dec-output').textContent = JSON.stringify(data, null, 2);
+  refreshTransferLog();
+}
+
+async function runTransferDemo() {
+  document.getElementById('enc-output').textContent = '⏳ Running crypto demo...';
+  const res = await fetch('/api/transfer/demo', { method: 'POST' });
+  const data = await res.json();
+  document.getElementById('enc-output').textContent = JSON.stringify(data, null, 2);
+  refreshTransferLog();
+}
+
+async function refreshTransferLog() {
+  const res = await fetch('/api/transfer/log');
+  const logs = await res.json();
+  document.getElementById('transfer-count').textContent = logs.length + ' operations';
+  const tbody = document.querySelector('#transfer-log-table tbody');
+  tbody.innerHTML = logs.reverse().map(l => `
+    <tr>
+      <td style="color:var(--text2)">${l.time}</td>
+      <td>${l.filename || '—'}</td>
+      <td><span class="proto ${l.operation === 'encrypt' ? 'proto-tcp' : 'proto-udp'}">${l.operation}</span></td>
+      <td>${l.original_size ? (l.original_size/1024).toFixed(1) + ' KB' : '—'}</td>
+      <td style="color:var(--text2);font-family:var(--mono);font-size:10px">${(l.sha256||'').slice(0,16)}...</td>
+      <td class="${l.status === 'success' ? 'sev-info' : 'sev-critical'}">${l.status}</td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text2);padding:20px">No operations yet</td></tr>';
+}
+
+// Drag-over effects
+['enc-drop','dec-drop'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('over'); });
+  el.addEventListener('dragleave', () => el.classList.remove('over'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('over');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const input = document.getElementById(id === 'enc-drop' ? 'enc-file' : 'dec-file');
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    input.onchange({ target: input });
+  });
+});
+</script>
+</body>
+</html>
