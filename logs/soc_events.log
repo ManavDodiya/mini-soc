@@ -372,3 +372,273 @@
 [22:41:26] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
 [22:41:28] INFO FILE_ACCESS | nginx event: file access
 [22:41:30] INFO DNS_QUERY | vsftpd event: dns query
+[22:41:31] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:41:33] INFO PROCESS_START | apache2 event: process start
+[22:41:34] WARNING CONFIG_CHANGE | Config file modified: /etc/sudoers
+[22:41:36] WARNING LOGIN_FAILURE | Failed login for 'guest' from 192.168.1.65
+[22:41:36] INFO NETWORK_CONN | vsftpd event: network conn
+[22:41:37] WARNING HTTP_REQUEST | HTTP 403 /login
+[22:41:39] INFO DNS_QUERY | mysql event: dns query
+[22:41:41] INFO PROCESS_START | systemd event: process start
+[22:41:42] INFO HTTP_REQUEST | HTTP 404 /admin
+[22:41:43] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:41:45] INFO NETWORK_CONN | cron event: network conn
+[22:41:46] WARNING LOGIN_FAILURE | Failed login for 'service' from 192.168.1.206
+[22:41:49] INFO FIREWALL_BLOCK | Blocked inbound 20.219.96.66:1433
+[22:41:50] WARNING LOGIN_FAILURE | Failed login for 'system' from 192.168.1.98
+[22:41:52] WARNING PRIVILEGE_ESCALATION | User 'root' executed 'sudo' command
+[22:41:53] WARNING CONFIG_CHANGE | Config file modified: /etc/sudoers
+[22:41:56] INFO LOGIN_SUCCESS | User 'root' authenticated via systemd
+[22:41:57] INFO NETWORK_CONN | cron event: network conn
+[22:41:58] WARNING LOGIN_FAILURE | Failed login for 'alice' from 192.168.1.154
+[22:42:00] INFO NETWORK_CONN | apache2 event: network conn
+[22:42:02] INFO FILE_ACCESS | systemd event: file access
+[22:42:04] INFO DNS_QUERY | nginx event: dns query
+[22:42:06] INFO FILE_ACCESS | nginx event: file access
+[22:42:08] INFO PROCESS_START | cron event: process start
+[22:42:10] WARNING PRIVILEGE_ESCALATION | User 'service' executed 'sudo' command
+[22:42:12] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:42:12] INFO LOGIN_SUCCESS | User 'guest' authenticated via apache2
+[22:42:14] INFO PROCESS_START | nginx event: process start
+[22:42:16] INFO DNS_QUERY | sshd event: dns query
+[22:42:16] INFO PROCESS_START | sshd event: process start
+[22:42:17] INFO DNS_QUERY | sshd event: dns query
+[22:42:18] INFO PROCESS_START | vsftpd event: process start
+[22:42:19] INFO FILE_ACCESS | sshd event: file access
+[22:42:21] WARNING PRIVILEGE_ESCALATION | User 'guest' executed 'sudo' command
+[22:42:23] WARNING PRIVILEGE_ESCALATION | User 'service' executed 'sudo' command
+[22:42:23] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:42:25] INFO HTTP_REQUEST | HTTP 404 /login
+[22:42:27] INFO NETWORK_CONN | nginx event: network conn
+[22:42:28] INFO DNS_QUERY | nginx event: dns query
+[22:42:30] WARNING LOGIN_FAILURE | Failed login for 'service' from 192.168.1.223
+[22:42:32] INFO FIREWALL_BLOCK | Blocked inbound 183.240.201.92:23
+[22:42:34] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.27
+[22:42:36] WARNING PRIVILEGE_ESCALATION | User 'root' executed 'sudo' command
+[22:42:38] INFO NETWORK_CONN | sshd event: network conn
+[22:42:39] INFO HTTP_REQUEST | HTTP 200 /
+[22:42:40] INFO FIREWALL_BLOCK | Blocked inbound 243.248.47.168:445
+[22:42:41] INFO FILE_ACCESS | vsftpd event: file access
+[22:42:43] INFO PROCESS_START | mysql event: process start
+[22:42:46] INFO FILE_ACCESS | mysql event: file access
+[22:42:46] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:42:48] INFO FILE_ACCESS | mysql event: file access
+[22:42:49] INFO FIREWALL_BLOCK | Blocked inbound 167.150.132.107:445
+[22:42:51] INFO DNS_QUERY | cron event: dns query
+[22:42:53] INFO NETWORK_CONN | apache2 event: network conn
+[22:42:55] WARNING HTTP_REQUEST | HTTP 500 /admin
+[22:42:56] WARNING HTTP_REQUEST | HTTP 403 /api/v1/users
+[22:42:57] INFO NETWORK_CONN | systemd event: network conn
+[22:42:59] INFO FILE_ACCESS | mysql event: file access
+[22:43:00] WARNING LOGIN_FAILURE | Failed login for 'system' from 192.168.1.197
+[22:43:01] INFO FIREWALL_BLOCK | Blocked inbound 25.12.248.64:23
+[22:43:03] INFO FIREWALL_BLOCK | Blocked inbound 155.84.106.76:445
+[22:43:04] INFO LOGIN_SUCCESS | User 'admin' authenticated via nginx
+[22:43:05] INFO FILE_ACCESS | vsftpd event: file access
+[22:43:06] INFO LOGIN_SUCCESS | User 'admin' authenticated via mysql
+[22:43:08] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:43:09] INFO FIREWALL_BLOCK | Blocked inbound 112.82.112.245:1433
+[22:43:10] INFO LOGIN_SUCCESS | User 'guest' authenticated via mysql
+[22:43:13] WARNING CONFIG_CHANGE | Config file modified: /etc/sudoers
+[22:43:15] INFO NETWORK_CONN | cron event: network conn
+[22:43:16] INFO NETWORK_CONN | mysql event: network conn
+[22:43:17] INFO DNS_QUERY | vsftpd event: dns query
+[22:43:19] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:43:20] INFO NETWORK_CONN | systemd event: network conn
+[22:43:22] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.190
+[22:43:23] INFO FILE_ACCESS | apache2 event: file access
+[22:43:24] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:43:26] INFO PROCESS_START | apache2 event: process start
+[22:43:28] INFO HTTP_REQUEST | HTTP 200 /login
+[22:43:30] INFO FILE_ACCESS | mysql event: file access
+[22:43:31] WARNING CONFIG_CHANGE | Config file modified: /etc/hosts
+[22:43:32] INFO FILE_ACCESS | systemd event: file access
+[22:43:34] INFO FIREWALL_BLOCK | Blocked inbound 66.202.239.219:445
+[22:43:36] INFO FILE_ACCESS | nginx event: file access
+[22:43:37] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:43:38] INFO FILE_ACCESS | systemd event: file access
+[22:43:39] INFO PROCESS_START | sshd event: process start
+[22:43:42] INFO FILE_ACCESS | apache2 event: file access
+[22:43:44] INFO HTTP_REQUEST | HTTP 301 /
+[22:43:45] INFO LOGIN_SUCCESS | User 'john' authenticated via systemd
+[22:43:47] INFO PROCESS_START | mysql event: process start
+[22:43:48] INFO FILE_ACCESS | sshd event: file access
+[22:43:50] INFO FILE_ACCESS | nginx event: file access
+[22:43:52] WARNING LOGIN_FAILURE | Failed login for 'root' from 192.168.1.47
+[22:43:53] INFO DNS_QUERY | apache2 event: dns query
+[22:43:54] INFO NETWORK_CONN | cron event: network conn
+[22:43:56] INFO PROCESS_START | nginx event: process start
+[22:43:57] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:43:58] INFO NETWORK_CONN | sshd event: network conn
+[22:43:59] INFO FIREWALL_BLOCK | Blocked inbound 172.145.84.112:3306
+[22:44:01] INFO DNS_QUERY | systemd event: dns query
+[22:44:03] INFO PROCESS_START | nginx event: process start
+[22:44:05] INFO PROCESS_START | apache2 event: process start
+[22:44:07] INFO LOGIN_SUCCESS | User 'system' authenticated via sshd
+[22:44:09] WARNING HTTP_REQUEST | HTTP 200 /wp-admin
+[22:44:11] WARNING LOGIN_FAILURE | Failed login for 'guest' from 192.168.1.145
+[22:44:11] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:44:14] WARNING LOGIN_FAILURE | Failed login for 'guest' from 192.168.1.56
+[22:44:16] WARNING LOGIN_FAILURE | Failed login for 'service' from 192.168.1.120
+[22:44:18] INFO NETWORK_CONN | systemd event: network conn
+[22:44:19] INFO LOGIN_SUCCESS | User 'john' authenticated via sshd
+[22:44:20] INFO PROCESS_START | sshd event: process start
+[22:44:20] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:44:21] WARNING PRIVILEGE_ESCALATION | User 'service' executed 'sudo' command
+[22:44:22] WARNING LOGIN_FAILURE | Failed login for 'system' from 192.168.1.123
+[22:44:24] INFO FILE_ACCESS | systemd event: file access
+[22:44:25] INFO FIREWALL_BLOCK | Blocked inbound 46.196.118.218:23
+[22:44:27] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:44:29] WARNING LOGIN_FAILURE | Failed login for 'john' from 192.168.1.212
+[22:44:30] INFO NETWORK_CONN | mysql event: network conn
+[22:44:31] INFO HTTP_REQUEST | HTTP 200 /login
+[22:44:32] INFO DNS_QUERY | vsftpd event: dns query
+[22:44:34] WARNING PRIVILEGE_ESCALATION | User 'guest' executed 'sudo' command
+[22:44:36] INFO PROCESS_START | mysql event: process start
+[22:44:38] INFO PROCESS_START | cron event: process start
+[22:44:40] INFO FIREWALL_BLOCK | Blocked inbound 130.37.248.225:445
+[22:44:41] INFO PROCESS_START | apache2 event: process start
+[22:44:42] INFO DNS_QUERY | vsftpd event: dns query
+[22:44:43] INFO PROCESS_START | nginx event: process start
+[22:44:44] INFO FIREWALL_BLOCK | Blocked inbound 250.136.63.31:1433
+[22:44:46] WARNING PRIVILEGE_ESCALATION | User 'admin' executed 'sudo' command
+[22:44:48] WARNING LOGIN_FAILURE | Failed login for 'alice' from 192.168.1.200
+[22:44:49] INFO DNS_QUERY | nginx event: dns query
+[22:44:51] INFO NETWORK_CONN | cron event: network conn
+[22:44:53] INFO FILE_ACCESS | vsftpd event: file access
+[22:44:55] WARNING PRIVILEGE_ESCALATION | User 'guest' executed 'sudo' command
+[22:44:57] WARNING PRIVILEGE_ESCALATION | User 'system' executed 'sudo' command
+[22:44:59] INFO DNS_QUERY | sshd event: dns query
+[22:45:01] WARNING PRIVILEGE_ESCALATION | User 'system' executed 'sudo' command
+[22:45:03] INFO NETWORK_CONN | cron event: network conn
+[22:45:04] INFO DNS_QUERY | sshd event: dns query
+[22:45:05] INFO FILE_ACCESS | nginx event: file access
+[22:45:06] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:45:08] WARNING HTTP_REQUEST | HTTP 403 /api/v1/users
+[22:45:09] INFO HTTP_REQUEST | HTTP 301 /api/v1/users
+[22:45:10] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:45:12] INFO DNS_QUERY | cron event: dns query
+[22:45:13] INFO PROCESS_START | mysql event: process start
+[22:45:16] INFO HTTP_REQUEST | HTTP 200 /admin
+[22:45:18] INFO PROCESS_START | nginx event: process start
+[22:45:19] INFO DNS_QUERY | nginx event: dns query
+[22:45:21] INFO FILE_ACCESS | cron event: file access
+[22:45:23] INFO FIREWALL_BLOCK | Blocked inbound 64.200.216.53:23
+[22:45:24] INFO NETWORK_CONN | systemd event: network conn
+[22:45:25] WARNING LOGIN_FAILURE | Failed login for 'john' from 192.168.1.232
+[22:45:26] INFO LOGIN_SUCCESS | User 'system' authenticated via cron
+[22:45:27] INFO FIREWALL_BLOCK | Blocked inbound 149.120.223.61:3306
+[22:45:29] WARNING HTTP_REQUEST | HTTP 500 /admin
+[22:45:31] INFO PROCESS_START | mysql event: process start
+[22:45:32] WARNING CONFIG_CHANGE | Config file modified: /etc/sudoers
+[22:45:34] WARNING HTTP_REQUEST | HTTP 500 /login
+[22:45:36] WARNING LOGIN_FAILURE | Failed login for 'alice' from 192.168.1.60
+[22:45:38] WARNING PRIVILEGE_ESCALATION | User 'admin' executed 'sudo' command
+[22:45:39] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.202
+[22:45:40] INFO LOGIN_SUCCESS | User 'service' authenticated via vsftpd
+[22:45:42] WARNING PRIVILEGE_ESCALATION | User 'system' executed 'sudo' command
+[22:45:44] INFO FILE_ACCESS | apache2 event: file access
+[22:45:46] INFO FIREWALL_BLOCK | Blocked inbound 40.195.23.220:3306
+[22:45:48] WARNING PRIVILEGE_ESCALATION | User 'admin' executed 'sudo' command
+[22:45:48] INFO DNS_QUERY | nginx event: dns query
+[22:45:50] INFO FILE_ACCESS | vsftpd event: file access
+[22:45:51] INFO FIREWALL_BLOCK | Blocked inbound 223.48.127.107:23
+[22:45:52] INFO FILE_ACCESS | systemd event: file access
+[22:45:55] INFO HTTP_REQUEST | HTTP 301 /admin
+[22:45:56] WARNING PRIVILEGE_ESCALATION | User 'system' executed 'sudo' command
+[22:45:58] INFO FILE_ACCESS | apache2 event: file access
+[22:46:00] INFO NETWORK_CONN | apache2 event: network conn
+[22:46:01] INFO FILE_ACCESS | cron event: file access
+[22:46:02] INFO LOGIN_SUCCESS | User 'admin' authenticated via vsftpd
+[22:46:04] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.115
+[22:46:05] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:46:08] WARNING CONFIG_CHANGE | Config file modified: /etc/hosts
+[22:46:10] INFO FILE_ACCESS | sshd event: file access
+[22:46:12] WARNING PRIVILEGE_ESCALATION | User 'root' executed 'sudo' command
+[22:46:13] WARNING HTTP_REQUEST | HTTP 404 /wp-admin
+[22:46:14] INFO NETWORK_CONN | nginx event: network conn
+[22:46:15] INFO DNS_QUERY | cron event: dns query
+[22:46:16] WARNING PRIVILEGE_ESCALATION | User 'system' executed 'sudo' command
+[22:46:18] INFO DNS_QUERY | vsftpd event: dns query
+[22:46:20] INFO FILE_ACCESS | nginx event: file access
+[22:46:21] INFO DNS_QUERY | mysql event: dns query
+[22:46:22] INFO FIREWALL_BLOCK | Blocked inbound 218.146.64.17:23
+[22:46:23] WARNING CONFIG_CHANGE | Config file modified: /etc/ssh/sshd_config
+[22:46:25] INFO DNS_QUERY | apache2 event: dns query
+[22:46:26] WARNING LOGIN_FAILURE | Failed login for 'system' from 192.168.1.94
+[22:46:28] WARNING LOGIN_FAILURE | Failed login for 'service' from 192.168.1.223
+[22:46:30] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:46:31] INFO NETWORK_CONN | nginx event: network conn
+[22:46:32] WARNING CONFIG_CHANGE | Config file modified: /etc/hosts
+[22:46:33] INFO LOGIN_SUCCESS | User 'service' authenticated via vsftpd
+[22:46:34] WARNING LOGIN_FAILURE | Failed login for 'root' from 192.168.1.159
+[22:46:37] INFO DNS_QUERY | sshd event: dns query
+[22:46:38] INFO FIREWALL_BLOCK | Blocked inbound 243.20.180.229:3389
+[22:46:39] INFO DNS_QUERY | nginx event: dns query
+[22:46:40] INFO FILE_ACCESS | systemd event: file access
+[22:46:41] INFO FILE_ACCESS | nginx event: file access
+[22:46:42] INFO PROCESS_START | apache2 event: process start
+[22:46:44] WARNING CONFIG_CHANGE | Config file modified: /etc/sudoers
+[22:46:46] WARNING PRIVILEGE_ESCALATION | User 'root' executed 'sudo' command
+[22:46:47] INFO PROCESS_START | systemd event: process start
+[22:46:49] INFO NETWORK_CONN | sshd event: network conn
+[22:46:51] INFO FIREWALL_BLOCK | Blocked inbound 85.124.249.2:23
+[22:46:53] INFO NETWORK_CONN | nginx event: network conn
+[22:46:55] INFO NETWORK_CONN | sshd event: network conn
+[22:46:57] INFO FIREWALL_BLOCK | Blocked inbound 57.183.137.43:445
+[22:46:58] WARNING CONFIG_CHANGE | Config file modified: /etc/passwd
+[22:47:00] INFO NETWORK_CONN | systemd event: network conn
+[22:47:02] INFO PROCESS_START | apache2 event: process start
+[22:47:04] INFO FIREWALL_BLOCK | Blocked inbound 47.91.153.106:3306
+[22:47:06] INFO NETWORK_CONN | mysql event: network conn
+[22:47:08] INFO DNS_QUERY | vsftpd event: dns query
+[22:47:09] INFO LOGIN_SUCCESS | User 'alice' authenticated via sshd
+[22:47:10] INFO FILE_ACCESS | cron event: file access
+[22:47:11] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:47:12] WARNING LOGIN_FAILURE | Failed login for 'root' from 192.168.1.84
+[22:47:14] INFO FIREWALL_BLOCK | Blocked inbound 3.54.47.246:3389
+[22:47:16] INFO LOGIN_SUCCESS | User 'system' authenticated via vsftpd
+[22:47:18] WARNING LOGIN_FAILURE | Failed login for 'john' from 192.168.1.198
+[22:47:19] INFO FIREWALL_BLOCK | Blocked inbound 181.87.201.229:23
+[22:47:20] WARNING LOGIN_FAILURE | Failed login for 'alice' from 192.168.1.75
+[22:47:22] INFO NETWORK_CONN | cron event: network conn
+[22:47:23] INFO LOGIN_SUCCESS | User 'root' authenticated via nginx
+[22:47:25] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:47:25] INFO PROCESS_START | vsftpd event: process start
+[22:47:27] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.254
+[22:47:28] INFO FIREWALL_BLOCK | Blocked inbound 52.207.29.120:22
+[22:47:29] INFO PROCESS_START | cron event: process start
+[22:47:31] INFO HTTP_REQUEST | HTTP 200 /
+[22:47:32] INFO DNS_QUERY | cron event: dns query
+[22:47:33] INFO LOGIN_SUCCESS | User 'john' authenticated via nginx
+[22:47:35] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:47:36] INFO FILE_ACCESS | systemd event: file access
+[22:47:38] INFO DNS_QUERY | nginx event: dns query
+[22:47:39] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:47:40] INFO DNS_QUERY | cron event: dns query
+[22:47:43] WARNING LOGIN_FAILURE | Failed login for 'system' from 192.168.1.15
+[22:47:43] WARNING LOGIN_FAILURE | Failed login for 'admin' from 192.168.1.4
+[22:47:45] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:47:46] WARNING PRIVILEGE_ESCALATION | User 'admin' executed 'sudo' command
+[22:47:48] INFO HTTP_REQUEST | HTTP 200 /admin
+[22:47:48] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:47:49] INFO FILE_ACCESS | vsftpd event: file access
+[22:47:51] INFO NETWORK_CONN | sshd event: network conn
+[22:47:53] WARNING HTTP_REQUEST | HTTP 500 /login
+[22:47:55] INFO NETWORK_CONN | apache2 event: network conn
+[22:47:57] INFO NETWORK_CONN | sshd event: network conn
+[22:47:59] INFO LOGIN_SUCCESS | User 'alice' authenticated via apache2
+[22:48:01] INFO LOGIN_SUCCESS | User 'system' authenticated via sshd
+[22:48:03] INFO NETWORK_CONN | nginx event: network conn
+[22:48:05] INFO DNS_QUERY | nginx event: dns query
+[22:48:07] INFO LOGIN_SUCCESS | User 'john' authenticated via nginx
+[22:48:08] INFO FIREWALL_BLOCK | Blocked inbound 93.97.190.239:22
+[22:48:10] INFO FIREWALL_BLOCK | Blocked inbound 22.210.170.208:445
+[22:48:12] INFO PROCESS_START | sshd event: process start
+[22:48:12] INFO LOGIN_SUCCESS | User 'system' authenticated via mysql
+[22:48:14] INFO LOGIN_SUCCESS | User 'john' authenticated via sshd
+[22:48:16] WARNING PRIVILEGE_ESCALATION | User 'john' executed 'sudo' command
+[22:48:17] INFO PROCESS_START | cron event: process start
+[22:48:18] INFO LOGIN_SUCCESS | User 'john' authenticated via systemd
+[22:48:21] WARNING CONFIG_CHANGE | Config file modified: /var/www/html/config.php
+[22:48:22] WARNING PRIVILEGE_ESCALATION | User 'root' executed 'sudo' command
